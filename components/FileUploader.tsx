@@ -6,6 +6,122 @@ import ProgressBar from './ProgressBar'
 import { signOut } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 
+function SetupInfo() {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  return (
+    <div className="mb-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg overflow-hidden">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+      >
+        <div className="flex items-center space-x-3">
+          <svg
+            className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span className="font-medium text-blue-900 dark:text-blue-100">
+            Setup Instructions & What to Expect
+          </span>
+        </div>
+        <svg
+          className={`h-5 w-5 text-blue-600 dark:text-blue-400 transition-transform ${
+            isExpanded ? 'rotate-180' : ''
+          }`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      {isExpanded && (
+        <div className="px-4 pb-4 pt-2 space-y-4 text-sm text-blue-800 dark:text-blue-200">
+          <div>
+            <h3 className="font-semibold mb-2">Environment Variables Setup</h3>
+            <p className="mb-2">
+              Create a <code className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/40 rounded text-xs">.env.local</code> file in your project root with:
+            </p>
+            <div className="bg-blue-100 dark:bg-blue-900/40 rounded p-3 font-mono text-xs overflow-x-auto">
+              <div className="space-y-1">
+                <div>NEXT_PUBLIC_SUPABASE_URL=your-project-url</div>
+                <div>NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key</div>
+                <div className="text-blue-600 dark:text-blue-400 mt-2">
+                  # Optional:
+                </div>
+                <div>NEXT_PUBLIC_STORAGE_BUCKET=uploads</div>
+                <div>NEXT_PUBLIC_MAX_FILE_SIZE=5368709120</div>
+                <div>NEXT_PUBLIC_CHUNK_SIZE=5242880</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-2">Where to Get Your Supabase Credentials</h3>
+            <p className="mb-2">
+              Get your project URL and anon key from:{' '}
+              <a
+                href="https://app.supabase.com/project/_/settings/api"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-blue-900 dark:hover:text-blue-100"
+              >
+                Supabase Project Settings → API
+              </a>
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-2">Storage Bucket Setup</h3>
+            <ol className="list-decimal list-inside space-y-1 ml-2">
+              <li>Go to Storage in your Supabase dashboard</li>
+              <li>Create a new bucket (default: "uploads")</li>
+              <li>Set bucket to <strong>Public</strong> or <strong>Private</strong> based on your needs</li>
+              <li>If private, ensure RLS policies allow authenticated users to upload</li>
+            </ol>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-2">What to Expect</h3>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>
+                <strong>Resumable Uploads:</strong> Large files can be paused and resumed
+              </li>
+              <li>
+                <strong>Progress Tracking:</strong> Real-time upload progress with speed indicators
+              </li>
+              <li>
+                <strong>File Validation:</strong> Automatic size and format validation
+              </li>
+              <li>
+                <strong>Secure Storage:</strong> Files are stored securely in your Supabase bucket
+              </li>
+              <li>
+                <strong>User Isolation:</strong> Files are organized by user ID
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 interface UploadState {
   file: File | null
   progress: number
@@ -195,6 +311,9 @@ export default function FileUploader() {
             Sign Out
           </button>
         </div>
+
+        {/* Setup Info */}
+        <SetupInfo />
 
         {/* Upload Area */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8">
